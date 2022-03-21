@@ -11,10 +11,7 @@ RUN virtualenv -p python3 /synapse && \
     source /synapse/bin/activate && \
     pip install --upgrade pip && \
     pip install --upgrade setuptools && \
-    pip install https://github.com/matrix-org/synapse/tarball/master --prefix="/install" --no-warn-script-location
-
-RUN apk del --purge $BUILDDEP
-RUN apk add $RUNDEP
+    pip install https://github.com/matrix-org/synapse/tarball/master
 
 FROM alpine:edge
 
@@ -24,8 +21,9 @@ RUN apk update \
 ENV RUNDEP libjpeg python3
 RUN apk add $RUNDEP
 
-COPY --from=builder /install /usr/local
-RUN ls -la /usr/local
+RUN mkdir /synapse
+COPY --from=builder /synapse /synapse
+RUN source /synapse/bin/activate
 
 # ADD scripts/run.sh /
 
