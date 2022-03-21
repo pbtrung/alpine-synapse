@@ -20,8 +20,19 @@ RUN python3 setup.py build
 
 WORKDIR /olm/build
 RUN make install
+
+RUN virtualenv -p python3 /synapse && \
+    source /synapse/bin/activate
+
 WORKDIR /olm/python
-RUN python3 setup.py install --optimize=1 --skip-build
+RUN pip install --optimize=1 --skip-build -e .
+
+RUN pip install --upgrade pip && \
+    pip install --upgrade setuptools && \
+    pip install cffi future && \
+    pip install matrix-synapse && \
+    pip install heisenbridge && \
+    pip install mautrix-telegram[all] mautrix-facebook[all] mautrix-googlechat[all]
 
 # ADD scripts/run.sh /
 
