@@ -38,13 +38,18 @@ FROM alpine:edge
 RUN apk update && \
     apk upgrade
 
-ENV RUNDEP libjpeg python3
+ENV RUNDEP libjpeg python3 tini
 RUN apk add $RUNDEP
 
 RUN mkdir /synapse
 COPY --from=builder /synapse /synapse
 COPY --from=builder /usr/local/lib/libolm.so* /usr/local/lib/
 
-# ADD scripts/run.sh /
+EXPOSE 8008/tcp 8448/tcp
 
-# ENTRYPOINT ["/run.sh"]
+VOLUME /data
+
+COPY run.sh /
+
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["/run.sh"]
