@@ -3,7 +3,7 @@ FROM alpine:edge as builder
 RUN apk update && \
     apk upgrade
 
-ENV BUILDDEP gcc libc-dev py3-pip openssl-dev zlib-dev jpeg-dev libffi-dev python3-dev py3-virtualenv make git g++ cmake py3-numpy py3-cffi py3-future py3-wheel
+ENV BUILDDEP gcc libc-dev py3-pip openssl-dev zlib-dev jpeg-dev libffi-dev python3-dev py3-virtualenv make git g++ cmake
 
 RUN apk add $BUILDDEP
 
@@ -26,6 +26,8 @@ RUN virtualenv -p python3 /synapse && \
     pip install --upgrade pip && \
     pip install --upgrade setuptools && \
     pip install --upgrade wheel && \
+    pip install --upgrade cffi && \
+    pip install --upgrade future && \
     /synapse/bin/python3 setup.py install --optimize=1 --skip-build && \
     pip install matrix-synapse && \
     pip install heisenbridge && \
@@ -36,15 +38,12 @@ FROM alpine:edge
 RUN apk update && \
     apk upgrade
 
-ENV RUNDEP libjpeg-turbo python3 py3-numpy py3-cffi py3-future
+ENV RUNDEP libjpeg python3
 RUN apk add $RUNDEP
 
 RUN mkdir /synapse
 COPY --from=builder /synapse /synapse
-
-COPY --from=builder /usr/local/lib/libolm.so* /usr/lib/
-
-COPY --from=builder /usr/lib/python3.10/site-packages/python_olm-3.2.10-py3.10-linux-aarch64.egg /usr/lib/python3.10/site-packages/python_olm-3.2.10-py3.10-linux-aarch64.egg
+COPY --from=builder /usr/local/lib/libolm.so* /usr/local/lib/
 
 # ADD scripts/run.sh /
 
