@@ -25,7 +25,7 @@ RUN virtualenv -p python3 /synapse && \
     source /synapse/bin/activate
 
 WORKDIR /olm/python
-RUN pip install --skip-build -e .
+RUN pip install -e .
 
 RUN pip install --upgrade pip && \
     pip install --upgrade setuptools && \
