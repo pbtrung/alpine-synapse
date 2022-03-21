@@ -26,7 +26,7 @@ RUN virtualenv -p python3 /synapse && \
     pip install --upgrade pip && \
     pip install --upgrade setuptools && \
     pip install --upgrade wheel && \
-    pip install -e . && \
+    /synapse/bin/python3 setup.py install --optimize=1 --skip-build && \
     pip install matrix-synapse && \
     pip install heisenbridge && \
     pip install mautrix-telegram[all] mautrix-facebook[all] mautrix-googlechat[all]
