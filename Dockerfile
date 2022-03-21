@@ -46,7 +46,11 @@ RUN apk add $RUNDEP
 
 RUN mkdir /synapse
 COPY --from=builder /synapse /synapse
-COPY --from=builder /usr/lib/libolm.so* /usr/lib
+
+COPY --from=builder /usr/lib/libolm.so /usr/lib
+COPY --from=builder /usr/lib/libolm.so.3 /usr/lib
+COPY --from=builder /usr/lib/libolm.so.3.2.10 /usr/lib
+
 COPY --from=builder /usr/lib/python3.10/site-packages/_libolm.abi3.so /usr/lib/python3.10/site-packages
 COPY --from=builder /usr/lib/python3.10/site-packages/olm /usr/lib/python3.10/site-packages/olm
 COPY --from=builder /usr/lib/python3.10/site-packages/python_olm-3.2.10-py3.10.egg-info /usr/lib/python3.10/site-packages/python_olm-3.2.10-py3.10.egg-info
