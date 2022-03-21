@@ -21,7 +21,7 @@ RUN python3 setup.py build
 WORKDIR /olm/build
 RUN make DESTDIR="/usr/local" install
 WORKDIR /olm/python
-python3 setup.py install --root="/usr/local" --optimize=1 --skip-build
+RUN python3 setup.py install --root="/usr/local" --optimize=1 --skip-build
 
 # ADD scripts/run.sh /
 
