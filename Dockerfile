@@ -19,9 +19,9 @@ WORKDIR /olm/python
 RUN python3 setup.py build
 
 WORKDIR /olm/build
-RUN make DESTDIR="/usr/local" install
+RUN make install
 WORKDIR /olm/python
-RUN python3 setup.py install --root="/usr/local" --optimize=1 --skip-build
+RUN python3 setup.py install --optimize=1 --skip-build
 
 # ADD scripts/run.sh /
 
