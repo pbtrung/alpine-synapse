@@ -8,8 +8,7 @@ ENV BUILDDEP gcc libc-dev py3-pip openssl-dev zlib-dev jpeg-dev libffi-dev pytho
 RUN apk add $BUILDDEP
 
 RUN git clone https://gitlab.matrix.org/matrix-org/olm
-RUN ls -la
-RUN cd olm
+WORKDIR /olm
 RUN ls -la
 RUN cmake -DCMAKE_INSTALL_PREFIX=/usr/local \
           -DCMAKE_BUILD_TYPE=None \
