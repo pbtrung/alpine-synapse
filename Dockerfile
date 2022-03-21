@@ -22,6 +22,9 @@ RUN make install
 RUN virtualenv -p python3 /synapse && \
     source /synapse/bin/activate
 
+RUN pip install --upgrade pip && \
+    pip install --upgrade setuptools wheel
+
 RUN pip install --upgrade cffi && \
     pip install --upgrade future
 
@@ -29,9 +32,7 @@ WORKDIR /olm/python
 RUN python3 setup.py build
 RUN python3 setup.py install --optimize=1 --skip-build
 
-RUN pip install --upgrade pip && \
-    pip install --upgrade setuptools && \
-    pip install matrix-synapse && \
+RUN pip install matrix-synapse && \
     pip install heisenbridge && \
     pip install mautrix-telegram[all] mautrix-facebook[all] mautrix-googlechat[all]
 
@@ -45,6 +46,10 @@ RUN apk add $RUNDEP
 
 RUN mkdir /synapse
 COPY --from=builder /synapse /synapse
+COPY --from=builder /usr/lib/libolm.so* /usr/lib
+COPY --from=builder /usr/lib/python3.10/site-packages/_libolm.abi3.so /usr/lib/python3.10/site-packages
+COPY --from=builder /usr/lib/python3.10/site-packages/olm /usr/lib/python3.10/site-packages/olm
+COPY --from=builder /usr/lib/python3.10/site-packages/python_olm-3.2.10-py3.10.egg-info /usr/lib/python3.10/site-packages/python_olm-3.2.10-py3.10.egg-info
 
 # ADD scripts/run.sh /
 
