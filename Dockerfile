@@ -3,7 +3,7 @@ FROM alpine:edge as builder
 RUN apk update \
     && apk upgrade
 
-ENV BUILDDEP gcc libc-dev py3-pip openssl-dev zlib-dev jpeg-dev libffi-dev python3-dev py3-virtualenv make git g++ cmake py3-cffi
+ENV BUILDDEP gcc libc-dev py3-pip openssl-dev zlib-dev jpeg-dev libffi-dev python3-dev py3-virtualenv make git g++ cmake py3-cffi py3-future
 
 RUN apk add $BUILDDEP
 
