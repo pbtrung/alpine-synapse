@@ -1,9 +1,9 @@
 FROM alpine:edge as builder
 
-RUN apk update \
-    && apk upgrade
+RUN apk update && \
+    apk upgrade
 
-ENV BUILDDEP gcc libc-dev py3-pip openssl-dev zlib-dev jpeg-dev libffi-dev python3-dev py3-virtualenv make git g++ cmake py3-numpy
+ENV BUILDDEP gcc libc-dev py3-pip openssl-dev zlib-dev jpeg-dev libffi-dev python3-dev py3-virtualenv make git g++ cmake py3-numpy py3-cffi py3-future py3-wheel
 
 RUN apk add $BUILDDEP
 
@@ -19,29 +19,25 @@ RUN cmake --build build
 WORKDIR /olm/build
 RUN make install
 
-RUN virtualenv -p python3 /synapse && \
-    source /synapse/bin/activate
-
-RUN pip install --upgrade pip && \
-    pip install --upgrade setuptools wheel
-
-RUN pip install --upgrade cffi && \
-    pip install --upgrade future
-
 WORKDIR /olm/python
 RUN python3 setup.py build
 RUN python3 setup.py install --optimize=1 --skip-build
 
-RUN pip install matrix-synapse && \
+RUN virtualenv -p python3 /synapse && \
+    source /synapse/bin/activate && \
+    pip install --upgrade pip && \
+    pip install --upgrade setuptools && \
+    pip install --upgrade wheel && \
+    pip install matrix-synapse && \
     pip install heisenbridge && \
     pip install mautrix-telegram[all] mautrix-facebook[all] mautrix-googlechat[all]
 
 FROM alpine:edge
 
-RUN apk update \
-    && apk upgrade
+RUN apk update && \
+    apk upgrade
 
-ENV RUNDEP libjpeg-turbo python3 py3-numpy
+ENV RUNDEP libjpeg-turbo python3 py3-numpy py3-cffi py3-future
 RUN apk add $RUNDEP
 
 RUN mkdir /synapse
