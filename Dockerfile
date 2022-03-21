@@ -11,7 +11,11 @@ RUN virtualenv -p python3 /synapse && \
     source /synapse/bin/activate && \
     pip install --upgrade pip && \
     pip install --upgrade setuptools && \
-    pip install https://github.com/matrix-org/synapse/tarball/master
+    pip install python-olm --extra-index-url https://gitlab.matrix.org/api/v4/projects/27/packages/pypi/simple && \
+    pip install matrix-synapse && \
+    pip install heisenbridge && \
+    pip install mautrix-telegram[all] mautrix-facebook[all] mautrix-googlechat[all]
+
 
 FROM alpine:edge
 
