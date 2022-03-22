@@ -37,7 +37,7 @@ FROM alpine:edge
 RUN apk update && \
     apk upgrade
 
-ENV RUNDEP libjpeg python3 tini
+ENV RUNDEP libjpeg python3 tini libmagic
 RUN apk add $RUNDEP
 
 RUN mkdir /synapse
