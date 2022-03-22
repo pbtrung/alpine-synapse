@@ -49,6 +49,7 @@ EXPOSE 8008/tcp 8448/tcp
 VOLUME /data
 
 COPY run.sh /
+COPY facebook-config.yaml /data/config.yaml
 
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["/run.sh"]
