@@ -1,9 +1,9 @@
-FROM alpine:edge as builder
+FROM alpine:edge
 
 RUN apk update && \
     apk upgrade
 
-ENV BUILDDEP gcc libc-dev py3-pip openssl-dev zlib-dev jpeg-dev libffi-dev python3-dev py3-virtualenv make git g++ cmake
+ENV BUILDDEP gcc libc-dev py3-pip openssl-dev zlib-dev jpeg-dev libffi-dev python3-dev py3-virtualenv make git g++ cmake py3-numpy
 
 RUN apk add $BUILDDEP
 
@@ -20,30 +20,24 @@ WORKDIR /olm/build
 RUN make install
 
 WORKDIR /olm/python
+RUN python3 setup.py install --optimize=1 --skip-build
 
-RUN virtualenv -p python3 /synapse && \
-    source /synapse/bin/activate && \
-    pip install --upgrade pip && \
+RUN pip install --upgrade pip && \
     pip install --upgrade setuptools && \
     pip install --upgrade wheel && \
     pip install --upgrade cffi && \
     pip install --upgrade future && \
-    /synapse/bin/python3 setup.py install --optimize=1 --skip-build && \
     pip install matrix-synapse && \
-    pip install heisenbridge && \
     pip install mautrix-telegram[all] mautrix-facebook[all] mautrix-googlechat[all]
 
-FROM alpine:edge
+WORKDIR /
 
-RUN apk update && \
-    apk upgrade
+RUN rm -rf /olm
+RUN rm -rf /root/.cache/pip
 
-ENV RUNDEP libjpeg python3 tini
+RUN apk del --purge $BUILDDEP
+ENV RUNDEP libjpeg python3 tini py3-numpy
 RUN apk add $RUNDEP
-
-RUN mkdir /synapse
-COPY --from=builder /synapse /synapse
-COPY --from=builder /usr/local/lib/libolm.so* /usr/local/lib/
 
 EXPOSE 8008/tcp 8448/tcp
 
