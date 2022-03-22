@@ -33,7 +33,7 @@ RUN rm -rf /olm
 RUN rm -rf /root/.cache/pip
 
 RUN apk del --purge $BUILDDEP
-ENV RUNDEP libjpeg python3 tini py3-numpy py3-cffi py3-future py3-six py3-idna libmagic py3-packaging py3-msgpack py3-webencodings
+ENV RUNDEP libjpeg python3 tini py3-numpy py3-cffi py3-future py3-six py3-idna libmagic py3-packaging py3-msgpack py3-webencodings py3-requests
 RUN apk add $RUNDEP
 
 EXPOSE 8008/tcp 8448/tcp
