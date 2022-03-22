@@ -3,7 +3,7 @@ FROM alpine:edge
 RUN apk update && \
     apk upgrade
 
-ENV BUILDDEP gcc libc-dev py3-pip openssl-dev zlib-dev jpeg-dev libffi-dev python3-dev py3-virtualenv make git g++ cmake py3-numpy
+ENV BUILDDEP gcc libc-dev py3-pip openssl-dev zlib-dev jpeg-dev libffi-dev python3-dev py3-virtualenv make git g++ cmake py3-numpy py3-cffi py3-future py3-wheel
 
 RUN apk add $BUILDDEP
 
@@ -24,9 +24,6 @@ RUN python3 setup.py install --optimize=1 --skip-build
 
 RUN pip install --upgrade pip && \
     pip install --upgrade setuptools && \
-    pip install --upgrade wheel && \
-    pip install --upgrade cffi && \
-    pip install --upgrade future && \
     pip install matrix-synapse && \
     pip install mautrix-telegram[all] mautrix-facebook[all] mautrix-googlechat[all]
 
@@ -36,7 +33,7 @@ RUN rm -rf /olm
 RUN rm -rf /root/.cache/pip
 
 RUN apk del --purge $BUILDDEP
-ENV RUNDEP libjpeg python3 tini py3-numpy
+ENV RUNDEP libjpeg python3 tini py3-numpy py3-cffi py3-future
 RUN apk add $RUNDEP
 
 EXPOSE 8008/tcp 8448/tcp
